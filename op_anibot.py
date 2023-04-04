@@ -16,19 +16,20 @@ auth = tweepy.OAuthHandler(api_key, api_secret_key)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth, wait_on_rate_limit=True)
 
-caminho = 'D:/anime_pics/'
-imagens = glob.glob(caminho + '/*.jpg')
-imagem = random.choice(imagens)
-
+caminho = '/home/kiwiyo/anibot/'
+imagens = glob.glob(caminho + '/*.jpeg')
 
 def cria_meme(imagem, texto):
-	with Image.open(imagem).convert("RGBA") as base:
+    with Image.open(imagem).convert("RGBA") as base:
 
 		# cria uma imagem em branco para o texto e com transparencia total
 	    txt = Image.new("RGBA", base.size, (255, 255, 255, 0))
 
+	    # tamanho font
+	    tamanho = round(base.size[0] * 0.08)
+
 	    # seleciona a fonte
-	    fnt = ImageFont.truetype("C:/Windows/Fonts/impact.ttf", 40)
+	    fnt = ImageFont.truetype("/home/kiwiyo/anibot/impact.ttf", tamanho)
 
 	    # cria o objeto desenho
 	    d = ImageDraw.Draw(txt)
@@ -45,19 +46,19 @@ def cria_meme(imagem, texto):
 	    y = (base.size[1] - text_size[1]) / 1.2
 
 	    # inclui o texto na imagem em branco
-	    d.multiline_text((x, y), text, font=fnt, fill=(255, 255, 255), stroke_width=5, stroke_fill=(199,21,133), align='center')
+	    d.multiline_text((x, y), text, font=fnt, fill=(255,255,0), stroke_width=5, stroke_fill=(0,0,0), align='center')
 
-	    # junta o texto com a imagem  
+	    # junta o texto com a imagem
 	    out = Image.alpha_composite(base, txt)
 
-	    caminho_salvar = 'D:/Downloads/anime_pics/imagem_twt.png'
+	    caminho_salvar = '/home/kiwiyo/anibot/imagem_twt.png'
 
 	    out.convert("RGB").save(caminho_salvar)
 
 	    return caminho_salvar
 
 
-nm_arquivo = 'ultimo_id.txt'
+nm_arquivo = '/home/kiwiyo/anibot/ultimo_id.txt'
 
 def recuperar_ultimo_id(nm_arquivo):
 	f_read = open(nm_arquivo, 'r')
@@ -87,11 +88,13 @@ def respondendo_tweets():
 		print('menção encontrada', flush=True)
 		print('mandando meme...', flush=True)
 
-		texto = mention.full_text[14:-1]
+		texto = mention.full_text[11:]
 
 		status = '@' + mention.user.screen_name
 
-		meme = cria_meme(imagem, texto)
+		#imagem = random.choice(imagens)
+
+		meme = cria_meme(random.choice(imagens), texto)
 
 		imagem_upload = api.media_upload(meme)
 
