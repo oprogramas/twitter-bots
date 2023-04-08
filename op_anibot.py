@@ -88,11 +88,10 @@ def respondendo_tweets():
 		print('menção encontrada', flush=True)
 		print('mandando meme...', flush=True)
 
-		texto = mention.full_text[11:]
+		texto = mention.full_text
+		texto = re.sub(r'@\w+', '', texto)
 
 		status = '@' + mention.user.screen_name
-
-		#imagem = random.choice(imagens)
 
 		meme = cria_meme(random.choice(imagens), texto)
 
